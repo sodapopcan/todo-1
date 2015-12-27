@@ -2,19 +2,21 @@ require('dotenv').load();
 
 var ENV = process.env;
 
-var pg = require('pg');
+var pgp = require('pg-promise')(/* options */);
 var _ = require('lodash');
+var express = require('express');
 
-var dburi = 'postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE;
+var db = pgp('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
+var app = express();
 
-pg.connect(dburi, function(err, client, done) {
-  if (err) return console.error('database error', err);
-
-  client.query("SELECT * FROM todos", function(err, result) {
-    done();
-
-    _.map(result.rows, function(todo) {
-      console.log(todo.id, todo.name);
+app.get('/api/todos', function(req, res) {
+  db.query("SELECT * FROM todos")
+    .then(function(data) {
+      res.send(data);
+    })
+    .catch(function(err) {
+      res.send("There was an error: " + err);
     });
-  });
 });
+
+app.listen(3000);
