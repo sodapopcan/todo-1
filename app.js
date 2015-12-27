@@ -2,30 +2,53 @@ require('dotenv').load();
 
 var ENV = process.env;
 
-var pgp = require('pg-promise')(/* options */);
+var Sequelize = require('sequelize');
+var bodyParser = require('body-parser');
 var express = require('express');
 
-var db = pgp('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
+var sequelize = new Sequelize('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
 var app = express();
 
 var _ = require('lodash');
 
-function apiCall(res, sql, params) {
-  db.query(sql, params)
-    .then(function(data) {
-      res.send(data);
-    })
-    .catch(function(err) {
-      res.send("There was an error: " + err);
-    });
-}
+
+/*  Config  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+/*  Models  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+var Todo = sequelize.define('todo', {
+  name: Sequelize.STRING
+});
+
+var TodoList = sequelize.define('todo_list', {
+  name: Sequelize.STRING,
+  complete: Sequelize.BOOLEAN
+});
+
+sequelize.sync();
+
+
+/*  Routes  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 app.get('/api/todos', function(req, res) {
-  apiCall(res, "SELECT * FROM todos");
+  Todo.findAll().then(function(todos) {
+    res.send(todos);
+  });
 });
 
 app.get('/api/todos/:id', function(req, res) {
-  apiCall(res, "SELECT * FROM todos WHERE id = $1", [req.params.id]);
+  Todo.findOne({ id: req.params.id  }).then(function(todo) {
+    res.send(todo);
+  });
+});
+
+app.post('/api/todos', function(req, res) {
+  Todo.create(req.body.todo).then(function(todo) {
+    res.send(todo);
+  });
 });
 
 app.listen(3000);
