@@ -1,15 +1,15 @@
 require('dotenv').load();
 
-var ENV = process.env;
+const ENV = process.env;
 
-var Sequelize = require('sequelize');
-var bodyParser = require('body-parser');
-var express = require('express');
+const Sequelize = require('sequelize');
+const bodyParser = require('body-parser');
+const express = require('express');
 
-var sequelize = new Sequelize('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
-var app = express();
+const sequelize = new Sequelize('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
+const app = express();
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 
 /*  Config  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -19,13 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /*  Models  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-var Todo = sequelize.define('todo', {
+const Todo = sequelize.define('todo', {
   name: Sequelize.STRING
-});
-
-var TodoList = sequelize.define('todo_list', {
-  name: Sequelize.STRING,
-  complete: Sequelize.BOOLEAN
 });
 
 sequelize.sync();
@@ -33,22 +28,16 @@ sequelize.sync();
 
 /*  Routes  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-app.get('/api/todos', function(req, res) {
-  Todo.findAll().then(function(todos) {
-    res.send(todos);
-  });
+app.get('/api/todos', (req, res) => {
+  Todo.findAll().then(todos => res.send(todos));
 });
 
-app.get('/api/todos/:id', function(req, res) {
-  Todo.findOne({ id: req.params.id  }).then(function(todo) {
-    res.send(todo);
-  });
+app.get('/api/todos/:id', (req, res) => {
+  Todo.findOne({ id: req.params.id  }).then(todo => res.send(todo));
 });
 
-app.post('/api/todos', function(req, res) {
-  Todo.create(req.body.todo).then(function(todo) {
-    res.send(todo);
-  });
+app.post('/api/todos', (req, res) => {
+  Todo.create(req.body.todo).then(todo => res.send(todo));
 });
 
 app.listen(3000);
