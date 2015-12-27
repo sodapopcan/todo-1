@@ -1,8 +1,0 @@
-{
-  "dev": {
-    "driver": "pg",
-    "host": { "ENV": "DB_HOST" },
-    "user": { "ENV": "DB_USER" },
-    "database": { "ENV": "DB_DATABASE" }
-  }
-}
