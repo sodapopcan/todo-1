@@ -3,11 +3,12 @@ require('dotenv').load();
 var ENV = process.env;
 
 var pgp = require('pg-promise')(/* options */);
-var _ = require('lodash');
 var express = require('express');
 
 var db = pgp('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
 var app = express();
+
+var _ = require('lodash');
 
 function apiCall(res, sql, params) {
   db.query(sql, params)
