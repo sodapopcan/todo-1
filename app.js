@@ -9,8 +9,6 @@ const express = require('express');
 const sequelize = new Sequelize('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
 const app = express();
 
-const _ = require('lodash');
-
 
 /*  Config  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
