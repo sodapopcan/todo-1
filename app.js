@@ -63,6 +63,11 @@ function cruddy_get_all(uri, model) {
   });
 }
 
+/* UI */
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
 /* ToDo */
 cruddy_get_all('/api/todos', Todo);
 cruddy_get('/api/todos/:id', Todo);
