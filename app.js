@@ -56,12 +56,14 @@ function cruddy_update(uri, model, token) {
   });
 }
 
+function cruddy_get_all(uri, model) {
+  app.get(uri, (req, res) => {
+    model.findAll().then(data => res.send(data));
+  });
+}
+
 /* ToDo */
-// List all
-app.get('/api/todos', (req, res) => {
-  Todo.findAll().then(todos => res.send(todos));
-});
-// List one
+cruddy_get_all('/api/todos', Todo);
 cruddy_get('/api/todos/:id', Todo);
 cruddy_create('/api/todos', Todo, 'todo');
 cruddy_update('/api/todos/:id', Todo, 'todo');
