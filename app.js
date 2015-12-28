@@ -3,8 +3,9 @@ require('dotenv').load();
 const ENV = process.env;
 
 const Sequelize = require('sequelize');
-const bodyParser = require('body-parser');
+
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const sequelize = new Sequelize('postgres://' + ENV.DB_USER + '@' + ENV.DB_HOST + '/' + ENV.DB_DATABASE);
 const app = express();
@@ -29,7 +30,6 @@ const TodoItem = sequelize.define('todo_item', {
 Todo.hasMany(TodoItem, { as: 'Items' });
 TodoItem.belongsTo(Todo);
 
-// sequelize.sync();
 sequelize.sync();
 
 
