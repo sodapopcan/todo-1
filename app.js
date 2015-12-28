@@ -17,6 +17,7 @@ const _ = require('lodash');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
 /*  Models  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 const Todo = sequelize.define('todo', {
@@ -31,6 +32,7 @@ const TodoItem = sequelize.define('todo_item', {
 Todo.hasMany(TodoItem, { as: 'Items' });
 TodoItem.belongsTo(Todo);
 
+// sequelize.sync();
 sequelize.sync();
 
 
@@ -44,7 +46,7 @@ function cruddy_get(uri, model) {
 
 function cruddy_create(uri, model, token) {
   app.post(uri, (req, res) => {
-    model.create(req.body[token]).then(data => res.send(data)).catch(e => res.send(e));
+    model.create(req.body[token]).then(data => res.send(data));
   });
 }
 
@@ -68,20 +70,10 @@ cruddy_get('/api/todos/:id', Todo);
 cruddy_create('/api/todos', Todo, 'todo');
 cruddy_update('/api/todos/:id', Todo, 'todo');
 
-// Create
-app.post('/api/todos', (req, res) => {
-  Todo.create(req.body.todo).then(todo => res.send(todo));
-});
-
-// Update
-app.put('/api/todos/:id', (req, res) => {
-  Todo.findOne({ id: req.params.id }).then(todo => {
-    todo.update(req.body.todo).then(todo => res.send(todo));
-  });
-});
-
-app.post('/api/todo/items', (req, res) => {
-  TodoItem.create(req.body.item).then(item => send(item));
-});
+/* Items */
+cruddy_get_all('/api/todos/:todo_id/items', TodoItem);
+cruddy_get('/api/todos/:todo_id/items/:id', TodoItem);
+cruddy_create('/api/todos/:todo_id/items/', TodoItem, 'todo_item');
+cruddy_update('/api/todos/:todo_id/items/:id', TodoItem, 'todo_item');
 
 app.listen(3000);
