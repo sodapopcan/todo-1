@@ -17,7 +17,6 @@ const _ = require('lodash');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
 /*  Models  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 const Todo = sequelize.define('todo', {
@@ -40,7 +39,7 @@ sequelize.sync();
 
 function cruddy_get(uri, model) {
   app.get(uri, (req, res) => {
-    model.findAll().then(data => res.send(data)).catch(e => res.send(e));
+    model.findById(req.params.id).then(data => res.send(data)).catch(e => res.send(e));
   });
 }
 
@@ -52,8 +51,10 @@ function cruddy_create(uri, model, token) {
 
 function cruddy_update(uri, model, token) {
   app.put(uri, (req, res) => {
-    model.findOne({ id: req.params.id }).then(instance => {
-      instance.update(req.body[token]).then(data => res.send(data)).catch(e => res.send(e));
+    model.findById(req.params.id).then(instance => {
+      (instance !== null)
+        ? instance.update(req.body[token]).then(data => res.send(data)).catch(e => res.send(e))
+        : res.send({});
     });
   });
 }
