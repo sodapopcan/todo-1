@@ -36,6 +36,12 @@ sequelize.sync();
 
 /*  Routes  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+function cruddy_get(uri, model) {
+  app.get(uri, (req, res) => {
+    model.findAll().then(data => res.send(data));
+  });
+}
+
 function cruddy_create(uri, model, token) {
   app.post(uri, (req, res) => {
     model.create(req.body[token]).then(data => res.send(data)).catch(e => res.send(e));
@@ -56,9 +62,7 @@ app.get('/api/todos', (req, res) => {
   Todo.findAll().then(todos => res.send(todos));
 });
 // List one
-app.get('/api/todos/:id', (req, res) => {
-  Todo.findOne({ id: req.params.id  }).then(todo => res.send(todo));
-});
+cruddy_get('/api/todos/:id', Todo);
 cruddy_create('/api/todos', Todo, 'todo');
 cruddy_update('/api/todos/:id', Todo, 'todo');
 
