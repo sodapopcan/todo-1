@@ -28,16 +28,30 @@ sequelize.sync();
 
 /*  Routes  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+// List all
 app.get('/api/todos', (req, res) => {
   Todo.findAll().then(todos => res.send(todos));
 });
 
+// List one
 app.get('/api/todos/:id', (req, res) => {
   Todo.findOne({ id: req.params.id  }).then(todo => res.send(todo));
 });
 
+// Create
 app.post('/api/todos', (req, res) => {
   Todo.create(req.body.todo).then(todo => res.send(todo));
+});
+
+// Update
+app.put('/api/todos/:id', (req, res) => {
+  Todo.findOne({ id: req.params.id }).then(todo => {
+    todo.update(req.body.todo).then(todo => res.send(todo));
+  });
+});
+
+app.post('/api/todo/items', (req, res) => {
+  TodoItem.create(req.body.item).then(item => send(item));
 });
 
 app.listen(3000);
