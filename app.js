@@ -40,27 +40,27 @@ sequelize.sync();
 
 function cruddy_get(uri, model) {
   app.get(uri, (req, res) => {
-    model.findAll().then(data => res.send(data));
+    model.findAll().then(data => res.send(data)).catch(e => res.send(e));
   });
 }
 
 function cruddy_create(uri, model, token) {
   app.post(uri, (req, res) => {
-    model.create(req.body[token]).then(data => res.send(data));
+    model.create(req.body[token]).then(data => res.send(data)).catch(e => res.send(e));
   });
 }
 
 function cruddy_update(uri, model, token) {
   app.put(uri, (req, res) => {
     model.findOne({ id: req.params.id }).then(instance => {
-      instance.update(req.body[token]).then(data => res.send(data));
+      instance.update(req.body[token]).then(data => res.send(data)).catch(e => res.send(e));
     });
   });
 }
 
 function cruddy_get_all(uri, model) {
   app.get(uri, (req, res) => {
-    model.findAll().then(data => res.send(data));
+    model.findAll().then(data => res.send(data)).catch(e => res.send(e));
   });
 }
 
